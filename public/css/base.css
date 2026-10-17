@@ -1,0 +1,91 @@
+/* ===== Design tokens (Notion-like) ===== */
+:root {
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Helvetica, Arial, sans-serif;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow-sm: 0 1px 2px rgba(15, 15, 15, .05);
+  --shadow-md: 0 4px 12px rgba(15, 15, 15, .08), 0 1px 3px rgba(15, 15, 15, .06);
+  --shadow-lg: 0 16px 40px rgba(15, 15, 15, .16), 0 2px 6px rgba(15, 15, 15, .1);
+  --topbar-h: 46px;
+}
+
+body.theme-light {
+  --bg: #ffffff;
+  --bg-sunken: #f7f7f5;
+  --bg-hover: rgba(55, 53, 47, .06);
+  --bg-active: rgba(55, 53, 47, .1);
+  --fg: #37352f;
+  --fg-muted: #70706e;
+  --fg-faint: #9b9a97;
+  --border: rgba(55, 53, 47, .12);
+  --border-strong: rgba(55, 53, 47, .2);
+  --accent: #2eaadc;
+  --primary: #37352f;
+  --primary-fg: #ffffff;
+  --danger: #eb5757;
+  --success: #4cbf99;
+  --warning: #d9730d;
+  --selected: rgba(35, 131, 226, .14);
+  --scrim: rgba(255, 255, 255, .6);
+}
+
+body.theme-dark {
+  --bg: #191919;
+  --bg-sunken: #202020;
+  --bg-hover: rgba(255, 255, 255, .055);
+  --bg-active: rgba(255, 255, 255, .1);
+  --fg: #d4d4d2;
+  --fg-muted: #9d9d98;
+  --fg-faint: #6b6b66;
+  --border: rgba(255, 255, 255, .12);
+  --border-strong: rgba(255, 255, 255, .22);
+  --accent: #3ec7f0;
+  --primary: #d4d4d2;
+  --primary-fg: #191919;
+  --danger: #ff6c6c;
+  --success: #4cbf99;
+  --warning: #e2a04c;
+  --selected: rgba(70, 170, 255, .2);
+  --scrim: rgba(10, 10, 10, .6);
+}
+
+/* ===== Reset / base ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+  transition: background-color .18s ease, color .18s ease;
+}
+h1, h2, h3, h4, p { margin: 0; }
+button { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+a { color: inherit; text-decoration: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+svg.lucide { width: 16px; height: 16px; stroke-width: 2; flex-shrink: 0; }
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+::selection { background: var(--selected); }
+
+/* scrollbars */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* profile banners (CSS gradients, Notion-style) */
+.banner-gradient { background-size: cover; background-position: center; }
+.banner-banner1 { background-image: linear-gradient(120deg, #a8c0ff 0%, #b8a9f2 50%, #f6d365 100%); }
+.banner-banner2 { background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
+.banner-banner3 { background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%); }
+.banner-banner4 { background-image: linear-gradient(120deg, #667eea 0%, #764ba2 100%); }
+.banner-banner5 { background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%); }
+.banner-banner6 { background-image: linear-gradient(120deg, #4facfe 0%, #00f2fe 100%); }
+.banner-banner7 { background-image: repeating-linear-gradient(45deg, #dcd5cc 0 12px, #cfc9bf 12px 24px); }
+.banner-banner8 { background-image: radial-gradient(circle at 20% 30%, #ffd3a5 0%, #fd6585 60%, #4776e6 120%); }
+body.theme-dark .banner-banner7 { background-image: repeating-linear-gradient(45deg, #2b2b2b 0 12px, #333 12px 24px); }
