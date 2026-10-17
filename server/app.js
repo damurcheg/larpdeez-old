@@ -8,6 +8,7 @@ const auth = require('./auth');
 
 const app = express();
 app.disable('x-powered-by');
+app.set('trust proxy', true);
 app.use(express.json({ limit: '12mb' }));
 app.use(cookieParser());
 

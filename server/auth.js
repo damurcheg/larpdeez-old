@@ -22,12 +22,19 @@ function verifyPassword(password, stored) {
 
 function ensureSetup() {
   if (!store.getSetting('passwordHash')) {
-    store.setSetting('passwordHash', hashPassword('admin123'));
-    store.setSetting('sessionSecret', crypto.randomBytes(32).toString('hex'));
-    console.log('[auth] No password configured. Temporary default password: admin123 — change it in Profile immediately.');
+    const initial = process.env.PLATFORM_PASSWORD || 'admin123';
+    store.setSetting('passwordHash', hashPassword(initial));
+    if (!process.env.PLATFORM_PASSWORD) {
+      console.log('[auth] No password configured. Temporary default password: admin123 — change it in Profile immediately.');
+    }
   }
   if (!store.getSetting('sessionSecret')) {
-    store.setSetting('sessionSecret', crypto.randomBytes(32).toString('hex'));
+    // Stable secret from env (if provided) keeps sessions valid across DB restores.
+    const seed = process.env.PLATFORM_SECRET_SEED;
+    const secret = seed
+      ? crypto.createHash('sha256').update(String(seed)).digest('hex')
+      : crypto.randomBytes(32).toString('hex');
+    store.setSetting('sessionSecret', secret);
   }
 }
 
