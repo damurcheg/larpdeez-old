@@ -20,19 +20,35 @@ async function getSessionSecret(env) {
 }
 
 export async function ensureSetup(env) {
+  // Bootstrap ONLY when there is no usable password yet. Once a real hash exists
+  // (or the user changed their password), the PLATFORM_PASSWORD secret must NOT
+  // overwrite it — that was the cause of "wrong password" after setting the secret.
   const existing = await getSetting(env, 'passwordHash');
   if (existing && !existing.startsWith('scrypt:')) return; // ready
-  // Bootstrap password: PLATFORM_PASSWORD secret only. No default password in production code.
+
   const initial = env.PLATFORM_PASSWORD;
   if (!initial) {
-    console.warn('[auth] passwordHash missing and PLATFORM_PASSWORD secret is not set — login is disabled until you configure it.');
+    console.warn('[auth] No password in D1 and PLATFORM_PASSWORD secret is not set — login is disabled until you configure the secret.');
     return;
   }
   await setSetting(env, 'passwordHash', await hashPassword(String(initial)));
-  await setSetting(env, 'password_configured', initial === 'admin123' ? '0' : '1');
-  if (initial === 'admin123') {
-    console.warn('[auth] Bootstrapped with the temporary password "admin123" — change it in Profile immediately.');
-  }
+  await setSetting(env, 'password_source', 'secret-bootstrap');
+  console.log('[auth] Password bootstrapped from the PLATFORM_PASSWORD secret. Change it in Profile when convenient.');
+}
+
+// If PLATFORM_PASSWORD secret was changed in the Cloudflare dashboard but an old
+// bootstrap hash is still stored in D1, re-apply the new secret once (per value).
+// This never touches passwords changed through the Profile UI.
+export async function syncBootstrapPassword(env) {
+  const secret = env.PLATFORM_PASSWORD;
+  if (!secret) return;
+  const source = await getSetting(env, 'password_source');
+  if (source !== 'secret-bootstrap') return; // password was set via UI or already synced
+  const applied = await getSetting(env, 'password_bootstrap_applied');
+  if (applied === (await sha256Hex(String(secret)))) return; // this exact value already applied
+  await setSetting(env, 'passwordHash', await hashPassword(String(secret)));
+  await setSetting(env, 'password_bootstrap_applied', await sha256Hex(String(secret)));
+  console.log('[auth] Re-applied the updated PLATFORM_PASSWORD secret to D1.');
 }
 
 async function signPayload(env, bodyB64) {
@@ -91,6 +107,9 @@ export async function changePassword(env, oldPassword, newPassword) {
   if (!(await verifyPassword(oldPassword, hash || ''))) return false;
   if (!newPassword || String(newPassword).length < 6) return 'short';
   await setSetting(env, 'passwordHash', await hashPassword(String(newPassword)));
+  // Password is now owned by the user (Profile UI), not the PLATFORM_PASSWORD secret —
+  // the bootstrap sync must never overwrite it again.
+  await setSetting(env, 'password_source', 'user');
   return true;
 }
 

@@ -38,7 +38,7 @@ window.App = (() => {
     screen.classList.remove('hidden');
     const err = document.getElementById('loginError');
     if (firstRun) {
-      err.textContent = 'Первый вход: временный пароль по умолчанию «admin123». Смените его в профиле сразу после входа.';
+      err.textContent = 'Пароль задаётся секретом PLATFORM_PASSWORD в Cloudflare. Если вход не удаётся — смените пароль командой из README (scripts/set-password.mjs).';
       err.classList.remove('hidden');
       err.style.color = 'var(--fg-muted)';
     } else if (message) {

@@ -1,5 +1,5 @@
 // POST /api/login — password check, session cookie, CSRF token.
-import { login, ensureSetup, sessionCookie, tooManyAttempts, registerAttempt, createCsrfToken, verifySessionToken } from '../lib/auth.js';
+import { login, ensureSetup, syncBootstrapPassword, sessionCookie, tooManyAttempts, registerAttempt, createCsrfToken, verifySessionToken } from '../lib/auth.js';
 import { getSetting, parseJsonSetting } from '../lib/db.js';
 import { json, badRequest, readJsonBody, secureFlag, clientIp } from '../lib/http.js';
 import { str } from '../lib/validate.js';
@@ -7,6 +7,7 @@ import { str } from '../lib/validate.js';
 export const onRequestPost = async (context) => {
   const { env } = context;
   await ensureSetup(env);
+  await syncBootstrapPassword(env); // secret changed in dashboard → re-apply once (only if password still comes from the secret)
 
   const ip = clientIp(context);
   if (await tooManyAttempts(env, ip)) return json({ error: 'too-many-attempts' }, 429);
