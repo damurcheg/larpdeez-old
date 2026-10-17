@@ -25,6 +25,12 @@ window.API = (() => {
     } catch (e) {
       throw new ApiError(0, 'network-error');
     }
+    if (res.status === 503 && url.includes('/api/session')) {
+      // Production bootstrap: no password in D1 yet and PLATFORM_PASSWORD secret is unset.
+      let code = 'auth-not-configured';
+      try { const d = await res.json(); if (d && d.error) code = d.error; } catch (e) { /* empty body */ }
+      throw new ApiError(503, code);
+    }
     if (res.status === 401 && !url.includes('/api/login')) {
       window.dispatchEvent(new CustomEvent('auth:expired'));
       throw new ApiError(401, 'unauthorized');

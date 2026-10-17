@@ -1,18 +1,28 @@
 {
-  "name": "workspace",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "edu-platform",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Personal learning platform — Cloudflare Pages + Pages Functions + D1 (legacy Node/Express server kept under server/ for local data migration only).",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/index.js"
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public",
+    "db:migrate:local": "wrangler d1 migrations apply edu-platform --local",
+    "db:migrate:remote": "wrangler d1 migrations apply edu-platform --remote",
+    "db:seed-local": "node scripts/migrate-to-d1.mjs && wrangler d1 execute edu-platform --local --file=./migrations/seed.sql",
+    "db:seed-remote": "node scripts/migrate-to-d1.mjs && wrangler d1 execute edu-platform --remote --file=./migrations/seed.sql",
+    "db:backup": "bash scripts/backup.sh",
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "better-sqlite3": "^12.11.1",
     "cookie-parser": "^1.4.7",
     "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.86.0"
   }
 }

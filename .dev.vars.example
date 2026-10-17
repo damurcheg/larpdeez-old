@@ -1,0 +1,10 @@
+# Local development only — copy to .dev.vars and fill in. NEVER commit real secrets.
+# These values are loaded by `wrangler pages dev` automatically.
+
+# Bootstrap password used ONCE when D1 has no passwordHash yet.
+# After the first login change it in Profile and remove this line.
+PLATFORM_PASSWORD=change-me-to-a-strong-password
+
+# Optional: stable seed for the session-signing secret (keeps sessions valid after DB restores).
+# Generate: openssl rand -hex 32
+PLATFORM_SECRET_SEED=

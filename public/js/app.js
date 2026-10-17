@@ -186,7 +186,11 @@ window.App = (() => {
       await enterApp();
     } catch (e) {
       let configured = true;
-      try { const sess = await API.session(); configured = !!sess.hasPasswordConfigured; } catch (e2) { /* unauthorized — assume unknown */ }
+      if (e.code === 'auth-not-configured') {
+        configured = false;
+      } else {
+        try { const sess = await API.session(); configured = !!sess.hasPasswordConfigured; } catch (e2) { /* unauthorized — assume unknown */ }
+      }
       showLogin(null, !configured);
     }
     refreshIcons(document.body);
