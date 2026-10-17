@@ -9,7 +9,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "edu-platform",
+      "database_name": "larpdeez",
       "database_id": "6c4be7d7-a385-4f77-9d5a-7bbc1e8102c0"
     }
   ],
