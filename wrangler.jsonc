@@ -10,12 +10,12 @@
     {
       "binding": "DB",
       "database_name": "edu-platform",
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+      "database_id": "320efa0f-6a3d-4e60-a1d3-3d3d06391cce"
     }
   ],
 
-  // Optional: durable login rate limiting across isolates (free tier).
-  // Create with: npx wrangler kv namespace create RATE_LIMIT
+  // Optional: durable login rate limiting across isolates (free tier)
+  // Create with: npx wrangler kv namespace create RATE_LIMIT 
   // Then paste the returned id below and run: npx wrangler pages deploy public
   // "kv_namespaces": [
   //   { "binding": "RATE_LIMIT_KV", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }

@@ -1,4 +1,4 @@
--- 0001: base schema (identical to the local SQLite schema of the Node server).
+-- 0001: base schema (identical to the local SQLite schema of the Node server)
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL
